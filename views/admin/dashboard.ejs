@@ -31,6 +31,33 @@
       </a>
     </div>
 
+    <div class="section-head">
+      <h2>Traffic</h2>
+    </div>
+    <div class="admin-stats">
+      <div class="stat-card">
+        <span class="stat-num"><%= analytics.totalViews %></span>
+        <span class="stat-label">Total page views</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num"><%= analytics.viewsToday %></span>
+        <span class="stat-label">Views today</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num"><%= analytics.viewsWeek %></span>
+        <span class="stat-label">Views this week</span>
+      </div>
+    </div>
+    <% if (analytics.topPages.length > 0) { %>
+      <table class="admin-table" style="margin-bottom: 36px;">
+        <thead><tr><th>Page</th><th>Views</th></tr></thead>
+        <tbody>
+          <% analytics.topPages.forEach(function(p) { %>
+            <tr><td><%= p.path %></td><td><%= p.views %></td></tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } %>
     <div class="admin-quicklinks">
       <a href="/admin/news/new" class="btn btn-primary">+ New article</a>
       <a href="/admin/gallery" class="btn btn-secondary">Upload to gallery</a>
@@ -38,6 +65,9 @@
       <a href="/admin/committee" class="btn btn-secondary">Manage committee</a>
       <a href="/admin/pages/about" class="btn btn-secondary">Edit About page</a>
       <a href="/admin/pages/constitution" class="btn btn-secondary">Edit Constitution</a>
+      <% if (adminRole === 'owner') { %>
+        <a href="/admin/admins" class="btn btn-secondary">Manage Admins</a>
+      <% } %>
     </div>
 
     <div class="section-head">

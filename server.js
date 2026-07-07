@@ -10,6 +10,7 @@ const db = require('./config/db');
 const publicRoutes = require('./routes/public');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const trackPageView = require('./middleware/track-views');
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.isLoggedIn = !!(req.session && req.session.adminId);
   res.locals.adminUsername = req.session ? req.session.adminUsername : null;
+  res.locals.adminRole = req.session ? req.session.adminRole : null;
   res.locals.currentPath = req.path;
   next();
 });
@@ -55,8 +57,8 @@ app.use((req, res, next) => {
 // ---------- Routes ----------
 app.use('/admin', authRoutes);
 app.use('/admin', adminRoutes);
+app.use(trackPageView);
 app.use('/', publicRoutes);
-
 // ---------- 404 ----------
 app.use((req, res) => {
   res.status(404).render('404', { title: 'Page not found' });

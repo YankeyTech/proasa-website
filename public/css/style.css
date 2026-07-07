@@ -275,3 +275,60 @@ h3 { font-size: 1.15rem; }
 .admin-actions-row { margin-top: 10px; }
 
 .error-page { text-align: center; }
+
+
+/* ===== Dark mode + weave motion signature ===== */
+:root { --ember: #c1483a; --teal: #2f7d6e; }
+html.dark {
+  --forest: #0f2a1c; --forest-deep: #081810; --forest-light: #163d29;
+  --parchment: #15140f; --parchment-deep: #1c1a13;
+  --ink: #ece7d8; --ink-soft: #b3ac96; --line: #3a3627;
+}
+html.dark body { background: var(--parchment); color: var(--ink); }
+html.dark .head-card, html.dark .news-card, html.dark .stat-card,
+html.dark .admin-card, html.dark .login-card { background: #1c1a13; border-color: var(--line); }
+
+@keyframes weave-shift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+.head-card { position: relative; overflow: hidden; }
+.head-card::before {
+  content: ''; position: absolute; top:0; left:0; right:0; height:4px;
+  background: linear-gradient(120deg, var(--gold) 0%, var(--ember) 35%, var(--teal) 70%, var(--forest-light) 100%);
+  background-size: 250% 250%; animation: weave-shift 6s ease infinite;
+}
+
+.theme-toggle {
+  width: 50px; height: 28px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--parchment-deep); position: relative; cursor: pointer; padding:0; flex-shrink:0;
+}
+.theme-toggle .knob {
+  position: absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%;
+  background: linear-gradient(120deg, var(--gold) 0%, var(--ember) 35%, var(--teal) 70%, var(--forest-light) 100%);
+  background-size: 250% 250%; animation: weave-shift 8s ease infinite;
+  transition: transform 0.3s cubic-bezier(.6,-0.1,.2,1.4);
+}
+html.dark .theme-toggle .knob { transform: translateX(22px); }
+
+.hero { position: relative; overflow: hidden; }
+.hero-blobs { position:absolute; inset:-20% -10% auto -10%; height:150%; z-index:0; filter: blur(70px); opacity:0.35; pointer-events:none; }
+html.dark .hero-blobs { opacity:0.22; }
+.hero-inner { position: relative; z-index: 1; }
+.blob { position:absolute; border-radius:50%; mix-blend-mode: multiply; }
+html.dark .blob { mix-blend-mode: screen; }
+.blob1 { width:380px; height:380px; background: var(--gold-bright); top:-10%; left:5%; animation: float1 16s ease-in-out infinite; }
+.blob2 { width:340px; height:340px; background: var(--ember); top:5%; right:8%; animation: float2 19s ease-in-out infinite; }
+.blob3 { width:320px; height:320px; background: var(--teal); bottom:-15%; left:30%; animation: float3 22s ease-in-out infinite; }
+@keyframes float1 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(50px,30px) scale(1.08);} }
+@keyframes float2 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-40px,50px) scale(0.95);} }
+@keyframes float3 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(30px,-40px) scale(1.05);} }
+
+.head-card, .news-card, .news-row, .gallery-item {
+  opacity:0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.head-card.visible, .news-card.visible, .news-row.visible, .gallery-item.visible {
+  opacity:1; transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle .knob, .head-card::before, .blob { animation: none !important; }
+}

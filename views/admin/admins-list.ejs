@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+<section class="section admin-section">
+  <div class="wrap">
+    <div class="admin-header">
+      <div>
+        <p class="eyebrow">Owner tools</p>
+        <h1>Manage Admins</h1>
+      </div>
+      <a href="/admin/dashboard" class="btn btn-ghost">Back to dashboard</a>
+    </div>
+
+    <table class="admin-table">
+      <thead><tr><th>Username</th><th>Role</th><th>Added</th><th></th></tr></thead>
+      <tbody>
+        <% admins.forEach(function(a) { %>
+          <tr>
+            <td><%= a.username %></td>
+            <td><span class="badge <%= a.role === 'owner' ? 'badge-live' : 'badge-draft' %>"><%= a.role %></span></td>
+            <td><%= new Date(a.created_at).toLocaleDateString('en-GB') %></td>
+            <td>
+              <% if (a.role !== 'owner') { %>
+                <form method="POST" action="/admin/admins/<%= a.id %>/delete" onsubmit="return confirm('Remove this admin account?');">
+                  <button type="submit" class="link-danger">Remove</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <div class="admin-card">
+      <h2>Add a new admin</h2>
+      <form method="POST" action="/admin/admins/new" class="stack-form">
+        <label for="new-username">Username</label>
+        <input type="text" id="new-username" name="username" required>
+       <label for="new-password">Password</label>
+        <div style="position:relative; max-width: 640px;">
+          <input type="password" id="new-password" name="password" required minlength="6" style="width:100%;">
+          <button type="button" onclick="togglePw('new-password', this)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:0.8rem; color: var(--ink-soft);">Show</button>
+        </div>
+        <p class="field-hint">New admins are added as editors — they can manage content but not other admin accounts.</p>
+        <button type="submit" class="btn btn-primary">Create admin</button>
+      </form>
+    </div>
+  </div>
+</section>
+<script>
+  function togglePw(id, btn) {
+    var field = document.getElementById(id);
+    if (field.type === 'password') {
+      field.type = 'text';
+      btn.textContent = 'Hide';
+    } else {
+      field.type = 'password';
+      btn.textContent = 'Show';
+    }
+  }
+</script>
+<%- include('../partials/footer') %>

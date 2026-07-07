@@ -8,6 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
+  <script>
+    (function() {
+      var stored = localStorage.getItem('proasa-theme');
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -34,14 +42,35 @@
         <a href="/gallery" class="<%= currentPath === '/gallery' ? 'active' : '' %>">Gallery</a>
         <a href="/news" class="<%= currentPath.startsWith('/news') ? 'active' : '' %>">News</a>
         <a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a>
-        <% if (isLoggedIn) { %>
+      <% if (isLoggedIn) { %>
           <a href="/admin/dashboard" class="nav-pill">Dashboard</a>
         <% } else { %>
           <a href="/admin/login" class="nav-pill">Admin</a>
         <% } %>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" type="button"><span class="knob"></span></button>
       </nav>
     </div>
   </header>
+
+  <script>
+    document.getElementById('themeToggle').addEventListener('click', function() {
+      var isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('proasa-theme', isDark ? 'dark' : 'light');
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      var revealEls = document.querySelectorAll('.head-card, .news-card, .news-row, .gallery-item');
+      if (!revealEls.length) return;
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry, i) {
+          if (entry.isIntersecting) {
+            setTimeout(function() { entry.target.classList.add('visible'); }, i * 70);
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      revealEls.forEach(function(el) { io.observe(el); });
+    });
+  </script>
 
   <% if (success && success.length) { %>
     <div class="flash flash-success wrap"><%= success[0] %></div>

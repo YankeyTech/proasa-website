@@ -9,33 +9,41 @@ const galleryModel = require('../models/gallery');
 const headsModel = require('../models/heads');
 const committeeModel = require('../models/committee');
 const pagesModel = require('../models/pages');
+const analyticsModel = require('../models/analytics');
+const adminModel = require('../models/admin');
+const bcrypt = require('bcryptjs');
+const { requireOwner } = require('../middleware/auth');
 
 router.use(requireLogin);
 
 // ---------- Dashboard ----------
 router.get('/dashboard', async (req, res, next) => {
   try {
-    const [allNews, allGallery, allHeads, allCommittee] = await Promise.all([
+    const [allNews, allGallery, allHeads, allCommittee, totalViews, viewsToday, viewsWeek, topPages] = await Promise.all([
       newsModel.getAllForAdmin(),
       galleryModel.getAll(),
       headsModel.getAll(),
-      committeeModel.getAll()
+      committeeModel.getAll(),
+      analyticsModel.getTotalViews(),
+      analyticsModel.getViewsToday(),
+      analyticsModel.getViewsThisWeek(),
+      analyticsModel.getTopPages()
     ]);
     res.render('admin/dashboard', {
-      title: 'Admin Dashboard — ProASA',
+      title: 'Admin Dashboard â€” ProASA',
       counts: {
         news: allNews.length,
         gallery: allGallery.length,
         heads: allHeads.length,
         committee: allCommittee.length
       },
-      recentNews: allNews.slice(0, 5)
+      recentNews: allNews.slice(0, 5),
+      analytics: { totalViews, viewsToday, viewsWeek, topPages }
     });
   } catch (err) {
     next(err);
   }
 });
-
 // ---------- News ----------
 router.get('/news', async (req, res, next) => {
   try {
@@ -277,6 +285,52 @@ router.post('/pages/:slug', async (req, res, next) => {
     await pagesModel.update(slug, title, content);
     req.flash('success', 'Page updated.');
     res.redirect(`/admin/pages/${slug}`);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- Manage Admins (owner only) ----------
+router.get('/admins', requireOwner, async (req, res, next) => {
+  try {
+    const admins = await adminModel.getAll();
+    res.render('admin/admins-list', { title: 'Manage Admins — ProASA', admins });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/admins/new', requireOwner, async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      req.flash('error', 'Username and password are required.');
+      return res.redirect('/admin/admins');
+    }
+    const existing = await adminModel.findByUsername(username.trim());
+    if (existing) {
+      req.flash('error', 'That username is already taken.');
+      return res.redirect('/admin/admins');
+    }
+    const passwordHash = await bcrypt.hash(password, 10);
+    await adminModel.create(username.trim(), passwordHash, 'editor');
+    req.flash('success', `Admin "${username}" created.`);
+    res.redirect('/admin/admins');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/admins/:id/delete', requireOwner, async (req, res, next) => {
+  try {
+    const targetId = parseInt(req.params.id, 10);
+    if (targetId === req.session.adminId) {
+      req.flash('error', 'You cannot remove your own account while logged in as it.');
+      return res.redirect('/admin/admins');
+    }
+    await adminModel.remove(targetId);
+    req.flash('success', 'Admin removed.');
+    res.redirect('/admin/admins');
   } catch (err) {
     next(err);
   }

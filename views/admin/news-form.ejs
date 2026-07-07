@@ -1,35 +1,49 @@
 <%- include('../partials/header') %>
-
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
 <section class="section admin-section">
   <div class="wrap wrap-narrow">
     <h1><%= article ? 'Edit Article' : 'New Article' %></h1>
-
     <form method="POST" action="<%= article ? `/admin/news/${article.id}/edit` : '/admin/news/new' %>" enctype="multipart/form-data" class="stack-form">
       <label for="title">Title</label>
       <input type="text" id="title" name="title" required value="<%= article ? article.title : '' %>">
-
       <label for="summary">Short summary (shown in listings)</label>
       <input type="text" id="summary" name="summary" maxlength="500" value="<%= article ? (article.summary || '') : '' %>">
-
       <label for="content">Full content</label>
-      <textarea id="content" name="content" rows="12" required><%= article ? article.content : '' %></textarea>
-      <p class="field-hint">Basic HTML tags like &lt;p&gt;, &lt;strong&gt;, &lt;br&gt; are supported.</p>
-
+      <div id="editor-content" style="background:#fff; border-radius: var(--radius);"></div>
+      <textarea id="content" name="content" style="display:none;" required><%= article ? article.content : '' %></textarea>
+      <p class="field-hint">Use the toolbar to format text, add links, and insert images.</p>
       <label for="image">Cover image <% if (article && article.image_url) { %>(uploading a new one replaces the current image)<% } %></label>
       <input type="file" id="image" name="image" accept="image/*">
       <% if (article && article.image_url) { %>
         <img src="<%= article.image_url %>" alt="Current cover" class="current-media-preview">
       <% } %>
-
       <label class="checkbox-label">
         <input type="checkbox" name="is_published" <%= (!article || article.is_published) ? 'checked' : '' %>>
         Published (visible to the public)
       </label>
-
       <button type="submit" class="btn btn-primary"><%= article ? 'Save changes' : 'Publish article' %></button>
       <a href="/admin/news" class="btn btn-ghost">Cancel</a>
     </form>
   </div>
 </section>
-
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+  var quill = new Quill('#editor-content', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        [{ header: [2, 3, false] }],
+        ['bold', 'italic', 'underline'],
+        ['link', 'image'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+  var contentField = document.getElementById('content');
+  quill.root.innerHTML = contentField.value;
+  document.querySelector('.stack-form').addEventListener('submit', function() {
+    contentField.value = quill.root.innerHTML;
+  });
+</script>
 <%- include('../partials/footer') %>

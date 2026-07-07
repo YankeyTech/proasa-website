@@ -29,8 +29,9 @@ router.post('/login', redirectIfLoggedIn, async (req, res, next) => {
       return res.redirect('/admin/login');
     }
 
-    req.session.adminId = admin.id;
+   req.session.adminId = admin.id;
     req.session.adminUsername = admin.username;
+    req.session.adminRole = admin.role;
     req.flash('success', `Welcome back, ${admin.username}.`);
     res.redirect('/admin/dashboard');
   } catch (err) {

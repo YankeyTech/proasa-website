@@ -63,7 +63,33 @@ CREATE TABLE IF NOT EXISTS site_pages (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Page view tracking for admin dashboard analytics
+CREATE TABLE IF NOT EXISTS page_views (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  path VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_path (path),
+  KEY idx_created_at (created_at)
+);
+
 INSERT INTO site_pages (slug, title, content) VALUES
   ('about', 'About ProASA', '<p>Tell your visitors who ProASA is and what the department does. Edit this from the admin dashboard.</p>'),
   ('constitution', 'ProASA Constitution', '<p>Paste or write your full constitution here. Edit this from the admin dashboard.</p>')
 ON DUPLICATE KEY UPDATE slug = slug;
+
+
+-- Roles: owner can manage other admin accounts, editor cannot
+ALTER TABLE admins ADD COLUMN role ENUM('owner', 'editor') NOT NULL DEFAULT 'editor';
+
+-- Make the very first admin account the owner (safe to run repeatedly)
+UPDATE admins SET role = 'owner' WHERE id = (SELECT id FROM (SELECT MIN(id) AS id FROM admins) AS t);
+
+-- Tracks who did what, for the admin activity feed
+CREATE TABLE IF NOT EXISTS activity_log (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  admin_id INT,
+  admin_username VARCHAR(100),
+  action VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE SET NULL
+);

@@ -1,5 +1,5 @@
 <%- include('../partials/header') %>
-
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
 <section class="section admin-section">
   <div class="wrap wrap-narrow">
     <h1>Edit <%= slug === 'about' ? 'About Page' : 'Constitution' %></h1>
@@ -15,13 +15,32 @@
       <label for="page-title">Internal title</label>
       <input type="text" id="page-title" name="title" required value="<%= page ? page.title : '' %>">
 
-      <label for="page-content">Content (HTML supported)</label>
-      <textarea id="page-content" name="content" rows="18" required><%= page ? page.content : '' %></textarea>
-
-      <button type="submit" class="btn btn-primary">Save changes</button>
+      <label for="page-content">Content</label>
+      <div id="editor-page-content" style="background:#fff; border-radius: var(--radius);"></div>
+      <textarea id="page-content" name="content" style="display:none;" required><%= page ? page.content : '' %></textarea>
+   <button type="submit" class="btn btn-primary">Save changes</button>
       <a href="/admin/dashboard" class="btn btn-ghost">Back to dashboard</a>
     </form>
   </div>
 </section>
-
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+  var quill = new Quill('#editor-page-content', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        [{ header: [2, 3, false] }],
+        ['bold', 'italic', 'underline'],
+        ['link', 'image'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+  var contentField = document.getElementById('page-content');
+  quill.root.innerHTML = contentField.value;
+  document.querySelector('.stack-form').addEventListener('submit', function() {
+    contentField.value = quill.root.innerHTML;
+  });
+</script>
 <%- include('../partials/footer') %>

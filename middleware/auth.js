@@ -13,4 +13,12 @@ function redirectIfLoggedIn(req, res, next) {
   next();
 }
 
-module.exports = { requireLogin, redirectIfLoggedIn };
+function requireOwner(req, res, next) {
+  if (req.session && req.session.adminRole === 'owner') {
+    return next();
+  }
+  req.flash('error', 'Only the account owner can do that.');
+  return res.redirect('/admin/dashboard');
+}
+
+module.exports = { requireLogin, redirectIfLoggedIn, requireOwner };
