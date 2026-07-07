@@ -16,7 +16,7 @@
       <input type="text" id="page-title" name="title" required value="<%= page ? page.title : '' %>">
 
       <label for="page-content">Content</label>
-      <div id="editor-page-content" style="background:#fff; border-radius: var(--radius);"></div>
+      <div id="editor-page-content" style="background:#fff; border-radius: var(--radius); min-height: 500px; max-height: 70vh; overflow-y: auto;"></div>
       <textarea id="page-content" name="content" style="display:none;"><%= page ? page.content : '' %></textarea>
    <button type="submit" class="btn btn-primary">Save changes</button>
       <a href="/admin/dashboard" class="btn btn-ghost">Back to dashboard</a>
