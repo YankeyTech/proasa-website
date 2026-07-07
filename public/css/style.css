@@ -64,7 +64,7 @@ h3 { font-size: 1.15rem; }
   margin: 0 0 10px;
 }
 
-.seal { width: 44px; height: 44px; color: var(--gold-bright); flex-shrink: 0; }
+.seal { width: 44px; height: 44px; color: var(--gold-bright); flex-shrink: 0; object-fit: cover; border-radius: 50%; }
 
 /* ---------- Header / Nav ---------- */
 .site-header {
