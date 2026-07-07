@@ -10,7 +10,7 @@
       <input type="text" id="summary" name="summary" maxlength="500" value="<%= article ? (article.summary || '') : '' %>">
       <label for="content">Full content</label>
       <div id="editor-content" style="background:#fff; border-radius: var(--radius);"></div>
-      <textarea id="content" name="content" style="display:none;" required><%= article ? article.content : '' %></textarea>
+      <textarea id="content" name="content" style="display:none;"><%= article ? article.content : '' %></textarea>
       <p class="field-hint">Use the toolbar to format text, add links, and insert images.</p>
       <label for="image">Cover image <% if (article && article.image_url) { %>(uploading a new one replaces the current image)<% } %></label>
       <input type="file" id="image" name="image" accept="image/*">
@@ -40,10 +40,17 @@
       ]
     }
   });
-  var contentField = document.getElementById('content');
+ var contentField = document.getElementById('content');
   quill.root.innerHTML = contentField.value;
-  document.querySelector('.stack-form').addEventListener('submit', function() {
+  quill.on('text-change', function() {
     contentField.value = quill.root.innerHTML;
+  });
+  document.querySelector('.stack-form').addEventListener('submit', function(e) {
+    contentField.value = quill.root.innerHTML;
+    if (quill.getText().trim().length === 0) {
+      e.preventDefault();
+      alert('Please write some content before publishing.');
+    }
   });
 </script>
 <%- include('../partials/footer') %>

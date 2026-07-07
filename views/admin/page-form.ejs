@@ -17,7 +17,7 @@
 
       <label for="page-content">Content</label>
       <div id="editor-page-content" style="background:#fff; border-radius: var(--radius);"></div>
-      <textarea id="page-content" name="content" style="display:none;" required><%= page ? page.content : '' %></textarea>
+      <textarea id="page-content" name="content" style="display:none;"><%= page ? page.content : '' %></textarea>
    <button type="submit" class="btn btn-primary">Save changes</button>
       <a href="/admin/dashboard" class="btn btn-ghost">Back to dashboard</a>
     </form>
@@ -39,8 +39,15 @@
   });
   var contentField = document.getElementById('page-content');
   quill.root.innerHTML = contentField.value;
-  document.querySelector('.stack-form').addEventListener('submit', function() {
+  quill.on('text-change', function() {
     contentField.value = quill.root.innerHTML;
+  });
+  document.querySelector('.stack-form').addEventListener('submit', function(e) {
+    contentField.value = quill.root.innerHTML;
+    if (quill.getText().trim().length === 0) {
+      e.preventDefault();
+      alert('Please write some content before saving.');
+    }
   });
 </script>
 <%- include('../partials/footer') %>
