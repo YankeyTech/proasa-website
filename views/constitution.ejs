@@ -1,16 +1,39 @@
 <%- include('partials/header') %>
-
-<section class="page-hero">
-  <div class="wrap">
-    <p class="eyebrow">The Charter</p>
-    <h1>ProASA Constitution</h1>
-  </div>
-</section>
-
 <section class="section">
-  <div class="wrap wrap-narrow prose constitution-doc">
-    <%- page ? page.content : '<p>The constitution will be published here soon.</p>' %>
+  <div class="wrap wrap-narrow">
+    <nav id="toc-box" class="toc-box"></nav>
+    <div class="prose constitution-doc" id="constitution-content">
+      <%- page ? page.content : '<p>The constitution will be published here soon.</p>' %>
+    </div>
   </div>
 </section>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var headings = document.querySelectorAll('#constitution-content h3');
+    var tocBox = document.getElementById('toc-box');
+    if (!headings.length) { tocBox.style.display = 'none'; return; }
 
+    var title = document.createElement('p');
+    title.className = 'toc-title';
+    title.textContent = 'Jump to a section';
+    tocBox.appendChild(title);
+
+    var list = document.createElement('div');
+    list.className = 'toc-list';
+
+    headings.forEach(function(h, i) {
+      var slug = 'section-' + (i + 1) + '-' + h.textContent
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      h.id = slug;
+      var link = document.createElement('a');
+      link.href = '#' + slug;
+      link.textContent = h.textContent;
+      list.appendChild(link);
+    });
+
+    tocBox.appendChild(list);
+  });
+</script>
 <%- include('partials/footer') %>
