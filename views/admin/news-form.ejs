@@ -55,8 +55,9 @@ quill.root.addEventListener('paste', function(e) {
     quill.clipboard.dangerouslyPasteHTML(range.index, paragraphs, 'user');
   });
 
-  var contentField = document.getElementById('content');
-  quill.root.innerHTML = contentField.value;
+ var contentField = document.getElementById('content');
+  var initialDelta = quill.clipboard.convert({ html: contentField.value });
+  quill.setContents(initialDelta, 'silent');
   quill.on('text-change', function() {
     contentField.value = quill.root.innerHTML;
   });
