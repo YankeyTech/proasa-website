@@ -1,0 +1,99 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Faculty of Business &amp; Management Studies — Koforidua Technical University</p>
+    <h1>The Professional Administrative<br>Students Association</h1>
+    <p class="hero-lede">ProASA represents and equips students of the Professional Administration department — building leadership, discipline, and a culture of service that carries into every office we go on to run.</p>
+    <div class="hero-actions">
+      <a href="/about" class="btn btn-primary">About the department</a>
+      <a href="/constitution" class="btn btn-ghost">Read our constitution</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Executive Leadership</p>
+      <h2>Our Departmental Heads</h2>
+    </div>
+
+    <% if (deptHeads.length === 0) { %>
+      <p class="empty-note">Department heads will appear here once added from the admin dashboard.</p>
+    <% } else { %>
+      <div class="heads-grid">
+        <% deptHeads.forEach(function(head) { %>
+          <article class="head-card">
+            <div class="head-photo">
+              <% if (head.photo_url) { %>
+                <img src="<%= head.photo_url %>" alt="<%= head.name %>">
+              <% } else { %>
+                <div class="photo-placeholder"><%- include('partials/seal') %></div>
+              <% } %>
+            </div>
+            <h3><%= head.name %></h3>
+            <p class="head-title"><%= head.title %></p>
+            <% if (head.bio) { %><p class="head-bio"><%= head.bio %></p><% } %>
+          </article>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<section class="section section-tint">
+  <div class="wrap">
+    <div class="section-head split">
+      <div>
+        <p class="eyebrow">Gazette</p>
+        <h2>Latest News</h2>
+      </div>
+      <a href="/news" class="link-more">All news &rarr;</a>
+    </div>
+
+    <% if (latestNews.length === 0) { %>
+      <p class="empty-note">No news posted yet. Check back soon.</p>
+    <% } else { %>
+      <div class="news-list">
+        <% latestNews.forEach(function(item) { %>
+          <a class="news-row" href="/news/<%= item.slug %>">
+            <span class="news-date"><%= new Date(item.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></span>
+            <span class="news-title"><%= item.title %></span>
+            <span class="news-arrow">&rarr;</span>
+          </a>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head split">
+      <div>
+        <p class="eyebrow">Moments</p>
+        <h2>From the Gallery</h2>
+      </div>
+      <a href="/gallery" class="link-more">Full gallery &rarr;</a>
+    </div>
+
+    <% if (galleryPreview.length === 0) { %>
+      <p class="empty-note">Gallery photos and videos will appear here once uploaded.</p>
+    <% } else { %>
+      <div class="gallery-grid gallery-grid-compact">
+        <% galleryPreview.forEach(function(item) { %>
+          <div class="gallery-item">
+            <% if (item.media_type === 'video') { %>
+              <video src="<%= item.media_url %>" muted playsinline></video>
+            <% } else { %>
+              <img src="<%= item.media_url %>" alt="<%= item.caption || item.title || 'ProASA gallery photo' %>" loading="lazy">
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

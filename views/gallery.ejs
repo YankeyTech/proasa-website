@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">In Pictures</p>
+    <h1>Gallery</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <% if (items.length === 0) { %>
+      <p class="empty-note">No photos or videos yet. Check back soon.</p>
+    <% } else { %>
+      <div class="gallery-grid">
+        <% items.forEach(function(item, i) { %>
+          <button class="gallery-item gallery-item-btn" data-lightbox-index="<%= i %>" data-type="<%= item.media_type %>" data-src="<%= item.media_url %>" data-caption="<%= item.caption || item.title || '' %>">
+            <% if (item.media_type === 'video') { %>
+              <video src="<%= item.media_url %>" muted playsinline></video>
+              <span class="play-badge">&#9654;</span>
+            <% } else { %>
+              <img src="<%= item.media_url %>" alt="<%= item.caption || item.title || 'ProASA gallery photo' %>" loading="lazy">
+            <% } %>
+          </button>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+  <div class="lightbox-content" id="lightbox-content"></div>
+  <p class="lightbox-caption" id="lightbox-caption"></p>
+</div>
+
+<%- include('partials/footer') %>

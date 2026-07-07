@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+<section class="section admin-section">
+  <div class="wrap">
+    <h1>Manage Committee Members</h1>
+    <p class="section-sub">Used on the About page for the Judicial Committee (and any other committee).</p>
+
+    <div class="admin-card">
+      <h3>Add a committee member</h3>
+      <form method="POST" action="/admin/committee/new" enctype="multipart/form-data" class="stack-form">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="role">Role</label>
+        <input type="text" id="role" name="role" required placeholder="e.g. Chairperson">
+
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option value="judicial">Judicial Committee</option>
+          <option value="executive">Executive Committee</option>
+        </select>
+
+        <label for="sort_order">Display order</label>
+        <input type="number" id="sort_order" name="sort_order" value="0">
+
+        <label for="photo">Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+    </div>
+
+    <% if (items.length === 0) { %>
+      <p class="empty-note">No committee members added yet.</p>
+    <% } else { %>
+      <div class="admin-people-grid">
+        <% items.forEach(function(m) { %>
+          <div class="admin-person-card">
+            <% if (m.photo_url) { %><img src="<%= m.photo_url %>" alt="<%= m.name %>"><% } %>
+            <form method="POST" action="/admin/committee/<%= m.id %>/edit" enctype="multipart/form-data" class="stack-form">
+              <label>Name</label>
+              <input type="text" name="name" value="<%= m.name %>" required>
+              <label>Role</label>
+              <input type="text" name="role" value="<%= m.role %>" required>
+              <label>Category</label>
+              <select name="category">
+                <option value="judicial" <%= m.category === 'judicial' ? 'selected' : '' %>>Judicial Committee</option>
+                <option value="executive" <%= m.category === 'executive' ? 'selected' : '' %>>Executive Committee</option>
+              </select>
+              <label>Order</label>
+              <input type="number" name="sort_order" value="<%= m.sort_order %>">
+              <label>Replace photo</label>
+              <input type="file" name="photo" accept="image/*">
+              <div class="admin-actions-row">
+                <button type="submit" class="btn btn-secondary btn-small">Save</button>
+              </div>
+            </form>
+            <form method="POST" action="/admin/committee/<%= m.id %>/delete" onsubmit="return confirm('Remove this person?');">
+              <button type="submit" class="btn btn-ghost btn-small">Delete</button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

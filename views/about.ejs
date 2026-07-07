@@ -1,0 +1,72 @@
+<%- include('partials/header') %>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">Article II — Identity</p>
+    <h1>About ProASA</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap-narrow prose">
+    <%- aboutPage ? aboutPage.content : '<p>Content coming soon.</p>' %>
+  </div>
+</section>
+
+<section class="section section-tint">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Article III — Oversight</p>
+      <h2>Judicial Committee</h2>
+      <p class="section-sub">The Judicial Committee upholds the ProASA constitution and adjudicates matters of discipline and conduct within the department.</p>
+    </div>
+
+    <% if (judicialMembers.length === 0) { %>
+      <p class="empty-note">Judicial committee members will appear here once added from the admin dashboard.</p>
+    <% } else { %>
+      <div class="committee-grid">
+        <% judicialMembers.forEach(function(m) { %>
+          <article class="committee-card">
+            <div class="committee-photo">
+              <% if (m.photo_url) { %>
+                <img src="<%= m.photo_url %>" alt="<%= m.name %>">
+              <% } else { %>
+                <div class="photo-placeholder small"></div>
+              <% } %>
+            </div>
+            <h3><%= m.name %></h3>
+            <p><%= m.role %></p>
+          </article>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<% if (execMembers.length) { %>
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Article IV — Administration</p>
+      <h2>Executive Committee</h2>
+    </div>
+    <div class="committee-grid">
+      <% execMembers.forEach(function(m) { %>
+        <article class="committee-card">
+          <div class="committee-photo">
+            <% if (m.photo_url) { %>
+              <img src="<%= m.photo_url %>" alt="<%= m.name %>">
+            <% } else { %>
+              <div class="photo-placeholder small"></div>
+            <% } %>
+          </div>
+          <h3><%= m.name %></h3>
+          <p><%= m.role %></p>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

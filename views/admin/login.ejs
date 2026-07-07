@@ -1,0 +1,22 @@
+<%- include('../partials/header') %>
+
+<section class="section login-section">
+  <div class="wrap wrap-narrow">
+    <div class="login-card">
+      <%- include('../partials/seal') %>
+      <h1>Admin Login</h1>
+      <p class="section-sub">Sign in to manage news, gallery, committee members and pages.</p>
+      <form method="POST" action="/admin/login" class="stack-form">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" class="btn btn-primary btn-block">Log in</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

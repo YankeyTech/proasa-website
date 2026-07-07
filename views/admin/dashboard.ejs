@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+
+<section class="section admin-section">
+  <div class="wrap">
+    <div class="admin-header">
+      <div>
+        <p class="eyebrow">Signed in as <%= adminUsername %></p>
+        <h1>Admin Dashboard</h1>
+      </div>
+      <form method="POST" action="/admin/logout">
+        <button type="submit" class="btn btn-ghost">Log out</button>
+      </form>
+    </div>
+
+    <div class="admin-stats">
+      <a href="/admin/news" class="stat-card">
+        <span class="stat-num"><%= counts.news %></span>
+        <span class="stat-label">News articles</span>
+      </a>
+      <a href="/admin/gallery" class="stat-card">
+        <span class="stat-num"><%= counts.gallery %></span>
+        <span class="stat-label">Gallery items</span>
+      </a>
+      <a href="/admin/heads" class="stat-card">
+        <span class="stat-num"><%= counts.heads %></span>
+        <span class="stat-label">Department heads</span>
+      </a>
+      <a href="/admin/committee" class="stat-card">
+        <span class="stat-num"><%= counts.committee %></span>
+        <span class="stat-label">Committee members</span>
+      </a>
+    </div>
+
+    <div class="admin-quicklinks">
+      <a href="/admin/news/new" class="btn btn-primary">+ New article</a>
+      <a href="/admin/gallery" class="btn btn-secondary">Upload to gallery</a>
+      <a href="/admin/heads" class="btn btn-secondary">Manage heads</a>
+      <a href="/admin/committee" class="btn btn-secondary">Manage committee</a>
+      <a href="/admin/pages/about" class="btn btn-secondary">Edit About page</a>
+      <a href="/admin/pages/constitution" class="btn btn-secondary">Edit Constitution</a>
+    </div>
+
+    <div class="section-head">
+      <h2>Recent articles</h2>
+    </div>
+    <% if (recentNews.length === 0) { %>
+      <p class="empty-note">No articles yet.</p>
+    <% } else { %>
+      <table class="admin-table">
+        <thead><tr><th>Title</th><th>Status</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          <% recentNews.forEach(function(n) { %>
+            <tr>
+              <td><%= n.title %></td>
+              <td><span class="badge <%= n.is_published ? 'badge-live' : 'badge-draft' %>"><%= n.is_published ? 'Published' : 'Draft' %></span></td>
+              <td><%= new Date(n.created_at).toLocaleDateString('en-GB') %></td>
+              <td><a href="/admin/news/<%= n.id %>/edit">Edit</a></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

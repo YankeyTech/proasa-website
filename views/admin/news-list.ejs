@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<section class="section admin-section">
+  <div class="wrap">
+    <div class="admin-header">
+      <h1>Manage News</h1>
+      <a href="/admin/news/new" class="btn btn-primary">+ New article</a>
+    </div>
+
+    <% if (items.length === 0) { %>
+      <p class="empty-note">No articles yet. Create your first one.</p>
+    <% } else { %>
+      <table class="admin-table">
+        <thead><tr><th>Title</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody>
+          <% items.forEach(function(n) { %>
+            <tr>
+              <td><%= n.title %></td>
+              <td><span class="badge <%= n.is_published ? 'badge-live' : 'badge-draft' %>"><%= n.is_published ? 'Published' : 'Draft' %></span></td>
+              <td><%= new Date(n.created_at).toLocaleDateString('en-GB') %></td>
+              <td class="admin-actions">
+                <a href="/admin/news/<%= n.id %>/edit">Edit</a>
+                <form method="POST" action="/admin/news/<%= n.id %>/delete" onsubmit="return confirm('Delete this article?');">
+                  <button type="submit" class="link-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

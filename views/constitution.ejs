@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">The Charter</p>
+    <h1>ProASA Constitution</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap-narrow prose constitution-doc">
+    <%- page ? page.content : '<p>The constitution will be published here soon.</p>' %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

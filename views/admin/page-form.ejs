@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+
+<section class="section admin-section">
+  <div class="wrap wrap-narrow">
+    <h1>Edit <%= slug === 'about' ? 'About Page' : 'Constitution' %></h1>
+    <p class="section-sub">
+      <% if (slug === 'constitution') { %>
+        Tip: paste each article as its own paragraph. Use &lt;h3&gt;Article I&lt;/h3&gt; before each section heading.
+      <% } else { %>
+        This text appears at the top of the About page, above the Judicial Committee.
+      <% } %>
+    </p>
+
+    <form method="POST" action="/admin/pages/<%= slug %>" class="stack-form">
+      <label for="page-title">Internal title</label>
+      <input type="text" id="page-title" name="title" required value="<%= page ? page.title : '' %>">
+
+      <label for="page-content">Content (HTML supported)</label>
+      <textarea id="page-content" name="content" rows="18" required><%= page ? page.content : '' %></textarea>
+
+      <button type="submit" class="btn btn-primary">Save changes</button>
+      <a href="/admin/dashboard" class="btn btn-ghost">Back to dashboard</a>
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

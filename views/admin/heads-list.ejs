@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+
+<section class="section admin-section">
+  <div class="wrap">
+    <h1>Manage Department Heads</h1>
+    <p class="section-sub">These 3 (or more) people appear on the homepage.</p>
+
+    <div class="admin-card">
+      <h3>Add a department head</h3>
+      <form method="POST" action="/admin/heads/new" enctype="multipart/form-data" class="stack-form">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="title">Title / Position</label>
+        <input type="text" id="title" name="title" required placeholder="e.g. Head of Department">
+
+        <label for="bio">Short bio (optional)</label>
+        <textarea id="bio" name="bio" rows="3"></textarea>
+
+        <label for="sort_order">Display order (lower number shows first)</label>
+        <input type="number" id="sort_order" name="sort_order" value="0">
+
+        <label for="photo">Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+    </div>
+
+    <% if (items.length === 0) { %>
+      <p class="empty-note">No department heads added yet.</p>
+    <% } else { %>
+      <div class="admin-people-grid">
+        <% items.forEach(function(h) { %>
+          <div class="admin-person-card">
+            <% if (h.photo_url) { %><img src="<%= h.photo_url %>" alt="<%= h.name %>"><% } %>
+            <form method="POST" action="/admin/heads/<%= h.id %>/edit" enctype="multipart/form-data" class="stack-form">
+              <label>Name</label>
+              <input type="text" name="name" value="<%= h.name %>" required>
+              <label>Title</label>
+              <input type="text" name="title" value="<%= h.title %>" required>
+              <label>Bio</label>
+              <textarea name="bio" rows="2"><%= h.bio || '' %></textarea>
+              <label>Order</label>
+              <input type="number" name="sort_order" value="<%= h.sort_order %>">
+              <label>Replace photo</label>
+              <input type="file" name="photo" accept="image/*">
+              <div class="admin-actions-row">
+                <button type="submit" class="btn btn-secondary btn-small">Save</button>
+              </div>
+            </form>
+            <form method="POST" action="/admin/heads/<%= h.id %>/delete" onsubmit="return confirm('Remove this person?');">
+              <button type="submit" class="btn btn-ghost btn-small">Delete</button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

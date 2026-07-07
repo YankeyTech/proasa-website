@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+
+<article class="section">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow"><%= new Date(article.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) %></p>
+    <h1><%= article.title %></h1>
+    <% if (article.image_url) { %>
+      <div class="article-hero-img"><img src="<%= article.image_url %>" alt="<%= article.title %>"></div>
+    <% } %>
+    <div class="prose">
+      <%- article.content %>
+    </div>
+    <p><a href="/news" class="link-more">&larr; Back to all news</a></p>
+  </div>
+</article>
+
+<%- include('partials/footer') %>

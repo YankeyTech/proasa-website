@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <meta name="description" content="Professional Administrative Students Association (ProASA), Koforidua Technical University — official site.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="/" class="brand">
+        <%- include('seal') %>
+        <span class="brand-text">
+          <strong>ProASA</strong>
+          <small>Koforidua Technical University</small>
+        </span>
+      </a>
+
+      <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </label>
+
+      <nav class="site-nav">
+        <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
+        <a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About</a>
+        <a href="/constitution" class="<%= currentPath === '/constitution' ? 'active' : '' %>">Constitution</a>
+        <a href="/gallery" class="<%= currentPath === '/gallery' ? 'active' : '' %>">Gallery</a>
+        <a href="/news" class="<%= currentPath.startsWith('/news') ? 'active' : '' %>">News</a>
+        <a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a>
+        <% if (isLoggedIn) { %>
+          <a href="/admin/dashboard" class="nav-pill">Dashboard</a>
+        <% } else { %>
+          <a href="/admin/login" class="nav-pill">Admin</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+
+  <% if (success && success.length) { %>
+    <div class="flash flash-success wrap"><%= success[0] %></div>
+  <% } %>
+  <% if (error && error.length) { %>
+    <div class="flash flash-error wrap"><%= error[0] %></div>
+  <% } %>
+
+  <main id="main">
