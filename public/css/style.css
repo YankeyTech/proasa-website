@@ -332,3 +332,44 @@ html.dark .blob { mix-blend-mode: screen; }
 @media (prefers-reduced-motion: reduce) {
   .theme-toggle .knob, .head-card::before, .blob { animation: none !important; }
 }
+
+
+/* ---- Constitution table of contents ---- */
+.toc-box {
+  background: var(--parchment-deep);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 40px;
+}
+html.dark .toc-box { background: #1c1a13; }
+.toc-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  margin: 0 0 14px;
+}
+.toc-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 24px;
+}
+@media (max-width: 640px) {
+  .toc-list { grid-template-columns: 1fr; }
+}
+.toc-list a {
+  font-size: 0.92rem;
+  text-decoration: none;
+  color: var(--ink);
+  padding: 4px 0;
+  border-bottom: 1px dotted transparent;
+}
+.toc-list a:hover {
+  color: var(--maroon);
+  border-bottom-color: var(--maroon);
+}
+.constitution-doc h3 {
+  scroll-margin-top: 90px;
+}
