@@ -37,7 +37,22 @@
       ]
     }
   });
-  var contentField = document.getElementById('page-content');
+ quill.root.addEventListener('paste', function(e) {
+    var clipboardData = e.clipboardData || window.clipboardData;
+    if (!clipboardData) return;
+    if (clipboardData.getData('text/html')) return; // rich paste (e.g. from Word) — let Quill handle it normally
+    var text = clipboardData.getData('text/plain');
+    if (!text) return;
+    e.preventDefault();
+    var paragraphs = text.split(/\n\s*\n/).map(function(p) {
+      var safe = p.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+      return '<p>' + safe + '</p>';
+    }).join('');
+    var range = quill.getSelection(true);
+    quill.clipboard.dangerouslyPasteHTML(range.index, paragraphs, 'user');
+  });
+
+  var contentField = document.getElementById('content');
   quill.root.innerHTML = contentField.value;
   quill.on('text-change', function() {
     contentField.value = quill.root.innerHTML;
