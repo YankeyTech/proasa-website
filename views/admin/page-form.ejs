@@ -52,7 +52,7 @@
     quill.clipboard.dangerouslyPasteHTML(range.index, paragraphs, 'user');
   });
 
-  var contentField = document.getElementById('content');
+  var contentField = document.getElementById('page-content');
   quill.root.innerHTML = contentField.value;
   quill.on('text-change', function() {
     contentField.value = quill.root.innerHTML;
